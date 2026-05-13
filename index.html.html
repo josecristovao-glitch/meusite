@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfólio - José Domingos</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;600;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --aqua: #00e5ff;
+            --aqua-dim: rgba(0, 229, 255, 0.15);
+            --aqua-glow: rgba(0, 229, 255, 0.4);
+            --white: #f0f8ff;
+            --white-dim: rgba(240, 248, 255, 0.75);
+            --bg: #000;
+        }
+
+        body {
+            background-color: var(--bg);
+            font-family: 'Share Tech Mono', monospace;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* VIDEO DE FUNDO */
+        #bg-video {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -2;
+            opacity: 0.35;
+        }
+
+        .overlay {
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(0,0,0,0.6) 0%, rgba(0,0,5,0.75) 100%);
+            z-index: -1;
+        }
+
+        /* ===== NAV ===== */
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(12px);
+            background: rgba(0, 0, 0, 0.55);
+            border-bottom: 1px solid rgba(0, 229, 255, 0.18);
+            padding: 0 5%;
+        }
+
+        nav {
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+            list-style: none;
+            padding: 14px 0;
+        }
+
+        nav li {
+            position: relative;
+        }
+
+        nav li a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            border: 1px solid rgba(0, 229, 255, 0.25);
+            color: var(--aqua);
+            font-size: 18px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            background: rgba(0, 229, 255, 0.05);
+        }
+
+        nav li a:hover {
+            background: var(--aqua-dim);
+            border-color: var(--aqua);
+            transform: scale(1.1);
+            box-shadow: 0 0 14px var(--aqua-glow);
+        }
+
+        /* TOOLTIP DO NAV */
+        .nav-tooltip {
+            position: absolute;
+            top: 54px;
+            right: 0;
+            background: rgba(0, 0, 0, 0.9);
+            border: 1px solid var(--aqua);
+            color: var(--aqua);
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 13px;
+            padding: 6px 14px;
+            border-radius: 6px;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(-6px);
+            transition: all 0.25s ease;
+        }
+
+        .nav-tooltip::before {
+            content: '';
+            position: absolute;
+            top: -6px;
+            right: 15px;
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-bottom: 6px solid var(--aqua);
+        }
+
+        nav li:hover .nav-tooltip {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ===== HERO ===== */
+        .hero {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: clamp(40px, 10vw, 160px);
+            min-height: calc(100vh - 75px);
+            padding: 60px 6%;
+            flex-wrap: wrap;
+        }
+
+        .img-container {
+            width: clamp(200px, 30vw, 360px);
+            height: clamp(200px, 30vw, 360px);
+            border-radius: 50%;
+            background: rgba(0, 229, 255, 0.07);
+            border: 2px solid rgba(0, 229, 255, 0.35);
+            box-shadow: 0 0 40px rgba(0, 229, 255, 0.15), inset 0 0 40px rgba(0, 229, 255, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            flex-shrink: 0;
+            position: relative;
+        }
+
+        .img-container::after {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            border-radius: 50%;
+            background: conic-gradient(var(--aqua) 0deg, transparent 120deg, transparent 360deg);
+            opacity: 0.15;
+            animation: spin 8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .img-container .placeholder-icon {
+            font-size: clamp(60px, 10vw, 100px);
+            color: rgba(0, 229, 255, 0.25);
+            z-index: 1;
+        }
+
+        /* INFO ABAIXO DA IMAGEM */
+        .img-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .profile-name {
+            text-align: center;
+            font-family: 'Rajdhani', sans-serif;
+        }
+
+        .profile-name h3 {
+            color: var(--white);
+            font-size: clamp(18px, 2.5vw, 26px);
+            font-weight: 700;
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+        }
+
+        .profile-name .cargo {
+            color: var(--aqua);
+            font-family: 'Share Tech Mono', monospace;
+            font-size: clamp(13px, 1.5vw, 16px);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            opacity: 0.85;
+        }
+
+        /* TEXTO LADO DIREITO */
+        .hero-text {
+            max-width: 480px;
+        }
+
+        .hero-text h1 {
+            color: var(--aqua);
+            font-size: clamp(42px, 7vw, 80px);
+            font-family: 'Share Tech Mono', monospace;
+            line-height: 1;
+            margin-bottom: 0;
+        }
+
+        .hero-text h2 {
+            color: var(--white);
+            font-size: clamp(36px, 6vw, 70px);
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 700;
+            line-height: 1;
+            margin-bottom: 20px;
+        }
+
+        .hero-text .bio {
+            color: var(--white-dim);
+            font-size: clamp(14px, 1.5vw, 16px);
+            line-height: 1.8;
+            border-left: 2px solid var(--aqua);
+            padding-left: 16px;
+            margin-bottom: 5%;
+        }
+
+        /* ===== SKILLS ===== */
+        .skills-section {
+            padding: 80px 6%;
+        }
+
+        .section-title {
+            color: var(--aqua);
+            font-size: clamp(28px, 4vw, 44px);
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 700;
+            margin-bottom: 50px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .section-title::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, rgba(0,229,255,0.5), transparent);
+        }
+
+        .skills-grid {
+            display: flex;
+            margin-bottom:50px ;
+            gap: 28px;
+            flex-wrap: wrap;
+        }
+
+        .skill-card {
+            background: rgba(0, 229, 255, 0.04);
+            border: 1px solid rgba(0, 229, 255, 0.2);
+            border-radius: 12px;
+            padding: 28px 36px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.3s ease;
+            cursor: default;
+            min-width: 130px;
+        }
+
+        .skill-card:hover {
+            background: rgba(0, 229, 255, 0.1);
+            border-color: var(--aqua);
+            transform: translateY(-6px);
+            box-shadow: 0 12px 30px rgba(0, 229, 255, 0.18);
+        }
+
+        .skill-card img {
+            width: 56px;
+            height: 56px;
+            object-fit: contain;
+            filter: drop-shadow(0 0 8px rgba(0,229,255,0.3));
+        }
+
+        .skill-card span {
+            color: var(--white-dim);
+            font-size: 13px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        /* Fallback quando imagem não carrega */
+        .skill-icon-fallback {
+            width: 56px;
+            height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 38px;
+            color: var(--aqua);
+        }
+
+        /* ===== RESPONSIVIDADE ===== */
+        @media (max-width: 768px) {
+            .hero {
+                flex-direction: column;
+                text-align: center;
+                gap: 40px;
+                padding: 40px 5%;
+            }
+
+            .hero-text h2 {
+                padding-left: 0;
+            }
+
+            .hero-text .bio {
+                border-left: none;
+                border-top: 2px solid var(--aqua);
+                padding-left: 0;
+                padding-top: 16px;
+            }
+
+            nav {
+                gap: 6px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .skills-grid {
+                justify-content: center;
+            }
+        }
+
+        /* ===== CONTACTOS ===== */
+        .contact-section {
+            padding: 80px 6% 120px;
+        }
+
+        .contact-grid {
+            display: flex;
+            gap: 24px;
+            flex-wrap: wrap;
+        }
+
+        .contact-card {
+            position: relative;
+            background: rgba(0, 229, 255, 0.04);
+            border: 1px solid rgba(0, 229, 255, 0.2);
+            border-radius: 14px;
+            padding: 32px 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 14px;
+            text-decoration: none;
+            transition: all 0.35s ease;
+            min-width: 150px;
+            overflow: hidden;
+        }
+
+        /* linha brilhante que entra pelo topo no hover */
+        .contact-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--card-color, var(--aqua));
+            transform: scaleX(0);
+            transition: transform 0.35s ease;
+        }
+
+        .contact-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .contact-card:hover {
+            background: rgba(0, 229, 255, 0.09);
+            border-color: var(--card-color, var(--aqua));
+            transform: translateY(-8px);
+            box-shadow: 0 16px 36px rgba(0, 0, 0, 0.4),
+                        0 0 20px color-mix(in srgb, var(--card-color, var(--aqua)) 30%, transparent);
+        }
+
+        .contact-card i {
+            font-size: 38px;
+            color: var(--card-color, var(--aqua));
+            transition: transform 0.3s ease;
+        }
+
+        .contact-card:hover i {
+            transform: scale(1.15);
+        }
+
+        .contact-card span {
+            color: var(--white-dim);
+            font-size: 13px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        /* cores únicas por rede */
+        .contact-card.linkedin { --card-color: #0a66c2; }
+        .contact-card.facebook { --card-color: #1877f2; }
+        .contact-card.github   { --card-color: #e0e0e0; }
+        .contact-card.whatsapp { --card-color: #25D366; }
+        .contact-card.instagram { --card-color: #833AB4; }
+
+        /* Animação de entrada */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .img-wrapper      { animation: fadeUp 0.7s ease 0.1s both; }
+        .hero-text        { animation: fadeUp 0.7s ease 0.3s both; }
+        .skills-section   { animation: fadeUp 0.7s ease 0.5s both; }
+        .contact-section  { animation: fadeUp 0.7s ease 0.6s both; }
+    </style>
+</head>
+<body>
+
+    <video autoplay muted loop id="bg-video">
+        <source src="https://www.pexels.com/pt-br/download/video/29168272/" type="video/mp4">
+    </video>
+    <div class="overlay"></div>
+
+    <header>
+        <nav>
+            <li>
+                <a href="#inicio"><i class="fa fa-home"></i></a>
+                <span class="nav-tooltip">Início</span>
+            </li>
+            <li>
+                <a href="#skills"><i class="fa fa-code"></i></a>
+                <span class="nav-tooltip">Skills</span>
+            </li>
+             <li>
+                <a href="#projectos"><i class="fa-solid fa-folder"></i></a>
+                <span class="nav-tooltip">Projectos</span>
+            </li>
+            <li>
+                <a href="#contactos"><i class="fa fa-envelope"></i></a>
+                <span class="nav-tooltip">Contactos</span>
+            </li>
+        </nav>
+    </header>
+
+    <main>
+        <!-- HERO -->
+        <section class="hero" id="inicio">
+
+            <!-- Imagem + nome + cargo -->
+            <div class="img-wrapper">
+                <div class="img-container">
+                    <img src="Ft.jpg" alt="José Domingos"
+                         style="width:100%; height:100%; object-fit:cover; border-radius:50%; z-index:1; position:relative;">
+                </div>
+                <div class="profile-name">
+                    <h3>José Domingos Sebastião Cristóvão</h3>
+                    <p class="cargo">Developer</p>
+                </div>
+            </div>
+
+            <!-- Texto -->
+            <div class="hero-text">
+                <h1>Meu</h1>
+                <h2>Portfólio</h2>
+                <h2>Em Manutenção</h2>
+                <p class="bio">
+                   Estudante de Ciências da Computação no IMETRO | Aprendendo Desenvolvimento de Software, Python e Tecnologias Web
+                </p>
+
+               <p class="bio">
+    Sou estudante de Ciências da Computação no IMETRO, apaixonado por tecnologia e desenvolvimento de software. 
+    Atualmente estou aprimorando minhas habilidades em programação, desenvolvimento web e resolução de problemas, 
+    buscando crescer profissionalmente através de projetos práticos e aprendizado contínuo.
+    Tenho interesse em áreas como desenvolvimento de software, inteligência artificial e tecnologia em geral.
+
+</p>
+            </div>
+
+        </section>
+
+        <!-- SKILLS -->
+        <section class="skills-section" id="skills">
+            <h2 class="section-title"><i class="fa fa-code"></i> Skills-Web</h2>
+
+            <div class="skills-grid">
+                <div class="skill-card">
+                    <img src="#" alt="HTML5"
+                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+                    <div class="skill-icon-fallback" style="display:none;"><i class="fa-brands fa-html5"></i></div>
+                    <span>HTML5</span>
+                </div>
+                <div class="skill-card">
+                    <img src="#" alt="CSS3"
+                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+                    <div class="skill-icon-fallback" style="display:none;"><i class="fa-brands fa-css3-alt"></i></div>
+                    <span>CSS3</span>
+                </div>
+                <div class="skill-card">
+                    <img src="#" alt="JavaScript"
+                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+                    <div class="skill-icon-fallback" style="display:none;"><i class="fa-brands fa-js"></i></div>
+                    <span>JavaScript</span>
+                </div>
+                <div class="skill-card">
+                    <img src="#" alt="JavaScript"
+                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+                    <div class="skill-icon-fallback" style="display:none;"><i class="fa-brands fa-wordpress"></i></div>
+                    <span>WordPress</span>
+                </div>
+
+
+            </div>
+
+               <h2 class="section-title"><i class="fa fa-code"></i> Skills-Back-End</h2>
+
+            <div class="skills-grid">
+                <div class="skill-card">
+                    <img src="#" alt="java"
+                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+                    <div class="skill-icon-fallback" style="display:none;"><i class="fa-brands fa-java"></i></div>
+                    <span>JAVA</span>
+                </div>
+                <div class="skill-card">
+                    <img src="#" alt="C"
+                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+                    <div class="skill-icon-fallback" style="display:none;"><i class="fa-brands fa-c"></i></div>
+                    <span>C</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="contact-section" id="projectos">
+            <h2 class="section-title"><i class="fa-solid fa-folder-open"></i>Projectos</h2>    
+            <div class="contact-grid">
+                <a href="#" target="_blank" class="contact-card linkedin">
+                    <i class="fa-solid fa-folder"></i>
+                    <span>Gerenciador de Stock</span>
+                </a>
+                <a href="#" target="_blank" class="contact-card facebook">
+                    <i class="fa-solid fa-folder"></i>
+                    <span>Simulador do Express</span>
+                </a>
+                <a href="#" target="_blank" class="contact-card facebook">
+                    <i class="fa-solid fa-folder"></i>
+                    <span>Projecto de Java<br>(Projecto em Construção)</span>
+                </a>
+                <a href="#" target="_blank" class="contact-card facebook">
+                    <i class="fa-solid fa-folder"></i>
+                    <span>Projecto WordPress</span>
+                </a>
+                <a href="#" target="_blank" class="contact-card facebook">
+                    <i class="fa-solid fa-folder"></i>
+                    <span>Explorando a Banda<br>(Projecto em Construção)
+                    </span>
+                </a>
+
+            </div>
+        </section>
+
+        <!-- CONTACTOS -->
+        <section class="contact-section" id="contactos">
+            <h2 class="section-title"><i class="fa fa-envelope"></i> Contactos</h2>
+
+            <div class="contact-grid">
+                <a href="https://linkedin.com/in/SEU-PERFIL" target="_blank" class="contact-card linkedin">
+                    <i class="fa-brands fa-linkedin"></i>
+                    <span>LinkedIn</span>
+                </a>
+                <a href="https://facebook.com/SEU-PERFIL" target="_blank" class="contact-card facebook">
+                    <i class="fa-brands fa-facebook"></i>
+                    <span>Facebook</span>
+                <a href="#Link do WhatsApp" target="_blank" class="contact-card whatsapp">
+                    <i class="fa-brands fa-whatsapp"></i>
+                    <span>WhatsApp</span>
+                </a>
+                <a href="#Link do Insta" target="_blank" class="contact-card instagram">
+                    <i class="fa-brands fa-instagram"></i>
+                    <span>Instagram</span>
+                </a>
+                </a>
+                <a href="https://github.com/SEU-PERFIL" target="_blank" class="contact-card github">
+                    <i class="fa-brands fa-github"></i>
+                    <span>GitHub</span>
+                </a>
+            </div>
+        </section>
+    </main>
+
+</body>
+</html>
